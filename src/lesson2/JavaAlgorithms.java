@@ -3,6 +3,7 @@ package lesson2;
 import kotlin.NotImplementedError;
 import kotlin.Pair;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @SuppressWarnings("unused")
@@ -82,7 +83,15 @@ public class JavaAlgorithms {
      * Х х Х
      */
     static public int josephTask(int menNumber, int choiceInterval) {
-        throw new NotImplementedError();
+        if (menNumber>0){
+            int result = 0;
+            int i = 1;
+            while (i <= menNumber) {
+                result = (result + choiceInterval) % i;
+                i++;
+            }
+            return result + 1;
+        } else throw new IllegalArgumentException("Число людей должно быть больше нуля");
     }
 
     /**
@@ -96,9 +105,32 @@ public class JavaAlgorithms {
      * Если имеется несколько самых длинных общих подстрок одной длины,
      * вернуть ту из них, которая встречается раньше в строке first.
      */
-    static public String longestCommonSubstring(String firs, String second) {
-        throw new NotImplementedError();
+    static public String longestCommonSubstring(String first, String second) {
+        int[][] table = new int[first.length()][second.length()];
+        int longest = 0;
+        Set<String> result = new HashSet<>();
+
+        for (int i = 0; i < first.length(); i++) {
+            for (int j = 0; j < second.length(); j++) {
+                if (first.charAt(i) != second.charAt(j)) {
+                    continue;
+                }
+
+                table[i][j] = (i == 0 || j == 0) ? 1
+                        : 1 + table[i - 1][j - 1];
+                if (table[i][j] > longest) {
+                    longest = table[i][j];
+                    result.clear();
+                }
+                if (table[i][j] == longest) {
+                    result.add(first.substring(i - longest + 1, i + 1));
+                }
+            }
+        }
+        return String.valueOf(result);
     }
+
+
 
     /**
      * Число простых чисел в интервале
